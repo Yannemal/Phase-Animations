@@ -7,13 +7,17 @@
 // Follow me on X: https://x.com/StewartLynch
 // Subscribe on YouTube: https://youTube.com/@StewartLynch
 // Buy me a ko-fi:  https://ko-fi.com/StewartLynch
-
+// student : @yannemal SUN 8-OCT23
 
 import SwiftUI
 
 struct Basic: View {
+    // MARK: - DATA:
     @State private var isDone = false
+    
     var body: some View {
+    // MARK: - someVIEW:
+        
         NavigationStack{
             Form {
                 Section("Animation with Completion") {
@@ -42,9 +46,10 @@ struct Basic: View {
                 }
             }
             .navigationTitle("Basics")
-        }
-    }
-}
+        } //end Stack
+    } //end someView
+} // endStruct
+
 
 #Preview {
     Basic()
