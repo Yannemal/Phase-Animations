@@ -10,15 +10,56 @@
 
 
 import SwiftUI
+// other structs / data
+
+enum PhaseState: Int, CaseIterable {
+    case first, second, third, fourth
+    
+    var color: Color {
+        //computed prop
+        switch self {
+            
+        case .first:  .yellow
+        case .second: .orange
+        default : .red
+        
+        }
+    }
+    
+    var rotation : Double {
+        -1 * Double(self.rawValue * 120)
+        // remember self is the enum's Int value 1,2,3,4
+    }
+    
+    var scale: Double {
+        Double(self.rawValue + 1)
+    }
+}
+
 
 struct PhaseWithTriggerView: View {
+// data:
+    @State private var start = false
     
     var body: some View {
+    //someview:
+        
         NavigationStack {
             Image(systemName: "star")
                 .font(.system(size: 40))
-                .foregroundColor(.yellow)
+                .phaseAnimator(PhaseState.allCases, trigger: start) { content, phase in
+                    content
+                        .foregroundStyle(phase.color)
+                        .scaleEffect(phase.scale)
+                        .rotationEffect(.degrees(phase.rotation))
+                } animation: { _ in
+                        .bouncy(duration: 1.0)
+                        
+                }
                 .navigationTitle("Phase Trigger")
+                .onTapGesture {
+                    start.toggle()
+                }
         }
     }
 }

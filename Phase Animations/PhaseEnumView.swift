@@ -10,16 +10,56 @@
 
 
 import SwiftUI
+// outside current struct
+
+enum myAnimationPhase: CaseIterable {
+    case beginning, middle, end
+    
+    var myOpacity: Double {
+        switch self {
+            
+        case .beginning: 1.0
+        case .middle: 0.3
+        case .end: 1.0
+        }
+    }
+    
+    var myScale: Double {
+        switch self {
+        case .beginning, .end : 0.75
+        case .middle: 1.3
+       
+        }
+    }
+    // time for each phase of animation 
+    var myAnimation : Animation {
+        switch self {
+        case .beginning, .end : .bouncy(duration: 0.4, extraBounce: 0.3)
+        case .middle : .easeInOut(duration: 1.5)
+        }
+    }
+}
 
 struct PhaseEnumView: View {
+// DATA:
+
     var body: some View {
+// someView
+        
         NavigationStack {
             Form{
                 Section{
                     Text("Example 1").font(.caption)
                     Image(systemName: "heart.fill")
                         .font(.system(size: 100))
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.orange)
+                        .phaseAnimator(myAnimationPhase.allCases) { content, phase in
+                              content
+                                .opacity(phase.myOpacity)
+                                .scaleEffect(phase.myScale)
+                        } animation: { phase in
+                            phase.myAnimation
+                        }
                         .centered(150)
                 }
                 Section {
@@ -31,8 +71,11 @@ struct PhaseEnumView: View {
                 }
             }
             .navigationTitle("Animation Phases")
-        }
-    }
+        } //end NavStack
+        
+    } // end someView
+    //METHODS:
+    
 }
 
 #Preview {

@@ -14,6 +14,7 @@ import SwiftUI
 struct Basic: View {
     // MARK: - DATA:
     @State private var isDone = false
+    @State private var scaleIt = false
     
     var body: some View {
     // MARK: - someVIEW:
@@ -24,10 +25,16 @@ struct Basic: View {
                     Text("iOS 17 Completion Block")
                     Image(systemName: isDone ? "checkmark.square" : "square")
                         .font(.system(size: 60))
+                        .scaleEffect(isDone ? (scaleIt ? 1.35 : 1) : (scaleIt ? 0.75 : 1))
                         .centered()
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.25)) {
                                 isDone.toggle()
+                                scaleIt.toggle()
+                            } completion: {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    scaleIt.toggle()
+                                }
                             }
                         }
                 }
@@ -36,11 +43,37 @@ struct Basic: View {
                     HStack {
                         Image(systemName: "hand.thumbsup.fill")
                             .font(.system(size: 60))
+                            .phaseAnimator([isDone]) { content, phase in
+                                content
+                                    .foregroundStyle(phase ? .orange : .black)
+                            } animation: { _ in
+                                    .smooth(duration: 5.0)
+                            }
+                        
+                            .phaseAnimator([true, false]) { content, phase in
+                                content
+                                    .scaleEffect(phase ? 0.8 : 1.1)
+                                    .rotationEffect(.degrees(phase ? 20 : -60))
+                            } animation: { _ in
+                                    .easeInOut(duration: 1.05)
+                            }
+                        Spacer()
                         Text("Hello World")
                             .bold()
                             .padding()
-                            .foregroundStyle(.red)
-                            .border(.red)
+                            .phaseAnimator([1,2,3]) { content, phase in
+                                content
+                                    .border((phase == 1) ? .indigo : (phase == 2) ? .blue : .green
+                                , width: phase == 2 ? 5 : 2)
+                                    .offset(x: (phase == 1) ? 170 : (phase == 3) ? -30 : 0)
+                            } animation: { phase in
+                                switch phase {
+                                case 1,2 : .smooth(duration: 1.5)
+                                default : .easeIn(duration: 1.0)
+                                    
+                                    
+                                }
+                            }
                     }
                     .centered()
                 }
